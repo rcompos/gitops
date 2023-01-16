@@ -1,27 +1,32 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: metaphor-staging
+  name: github-runner-components
   namespace: argocd
-  finalizers:
-  - resources-finalizer.argocd.argoproj.io
   annotations:
-    argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/sync-wave: "60"
+    addons.kubefirst.io/name: github
 spec:
   project: default
   source:
     repoURL: https://github.com/rcompos/gitops
-    path: components/staging/metaphor
+    path: components/github-runner
     targetRevision: HEAD
-    helm:
-      valueFiles:
-        - values.yaml
   destination:
     server: https://kubernetes.default.svc
-    namespace: staging
+    namespace: github-runner
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
+      - Replace=true
+      - PruneLast=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        maxDuration: 5m0s
+        factor: 2

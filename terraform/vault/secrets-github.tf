@@ -1,49 +1,41 @@
 resource "vault_generic_secret" "ci_secrets" {
-  path = "${vault_mount.secret.path}/ci-secrets"
+  path = "secret/ci-secrets"
 
   data_json = jsonencode(
     {
-      BASIC_AUTH_USER = "admin",
-      BASIC_AUTH_PASS = random_password.chartmuseum_user_password.result,
-      USERNAME = "kubefirst",
+      BASIC_AUTH_USER       = "k-ray",
+      BASIC_AUTH_PASS       = "feedkraystars",
+      USERNAME              = "rcompos",
       PERSONAL_ACCESS_TOKEN = var.github_token,
-      SSH_PRIVATE_KEY = var.ssh_private_key,
+      username              = "rcompos",
+      password              = var.github_token,
     }
   )
 }
 
 resource "vault_generic_secret" "atlantis_secrets" {
-  path = "${vault_mount.secret.path}/atlantis"
+  path = "secret/atlantis"
 
   data_json = jsonencode(
-  {
-	ARGOCD_AUTH_USERNAME = "admin",
-	ARGOCD_INSECURE = "false",
-	ARGOCD_SERVER = "argocd.<AWS_HOSTED_ZONE_NAME>:443",
-	ARGO_SERVER_URL = "argo.<AWS_HOSTED_ZONE_NAME>:443",
-	ATLANTIS_GH_HOSTNAME = "<GITHUB_HOST>",
-	ATLANTIS_GH_TOKEN = var.github_token,
-	ATLANTIS_GH_USER = "<GITHUB_USER>",
-	ATLANTIS_GH_WEBHOOK_SECRET = var.atlantis_repo_webhook_secret,
-	AWS_DEFAULT_REGION = "<AWS_DEFAULT_REGION>",
-	AWS_ROLE_TO_ASSUME = "arn:aws:iam::<AWS_ACCOUNT_ID>:role/KubernetesAdmin",
-	AWS_SESSION_NAME = "GitHubAction",
-	GITHUB_OWNER = "<GITHUB_OWNER>",
-	GITHUB_TOKEN = var.github_token,
-	KUBECONFIG = "/.kube/config",
-	TF_VAR_atlantis_repo_webhook_secret = var.atlantis_repo_webhook_secret,
-	TF_VAR_aws_account_id = "<AWS_ACCOUNT_ID>",
-	TF_VAR_aws_region = "<AWS_DEFAULT_REGION>",
-	TF_VAR_email_address = var.email_address,
-	TF_VAR_github_token = var.github_token,
-	TF_VAR_hosted_zone_id = var.hosted_zone_id,
-	TF_VAR_hosted_zone_name = var.hosted_zone_name,
-	TF_VAR_kubefirst_bot_ssh_public_key = var.kubefirst_bot_ssh_public_key,
-	TF_VAR_ssh_private_key = var.ssh_private_key
-	TF_VAR_vault_addr = var.vault_addr,
-	TF_VAR_vault_token = var.vault_token,
-	VAULT_ADDR = "https://vault.<AWS_HOSTED_ZONE_NAME>",
-	VAULT_TOKEN = var.vault_token,
-}
-)
+    {
+      ARGOCD_AUTH_USERNAME                = "admin",
+      ARGOCD_INSECURE                     = "true",
+      ARGOCD_SERVER                       = "http://localhost:8080",
+      ARGO_SERVER_URL                     = "argo.argo.svc.cluster.local:2746",
+      ATLANTIS_GH_HOSTNAME                = "github.com",
+      ATLANTIS_GH_TOKEN                   = var.github_token,
+      ATLANTIS_GH_USER                    = "rcompos",
+      ATLANTIS_GH_WEBHOOK_SECRET          = var.atlantis_repo_webhook_secret,
+      GITHUB_OWNER                        = "rcompos",
+      GITHUB_TOKEN                        = var.github_token,
+      TF_VAR_atlantis_repo_webhook_secret = var.atlantis_repo_webhook_secret,
+      TF_VAR_atlantis_repo_webhook_url    = var.atlantis_repo_webhook_url,
+      TF_VAR_github_token                 = var.github_token,
+      TF_VAR_kubefirst_bot_ssh_public_key = var.kubefirst_bot_ssh_public_key,
+      TF_VAR_vault_addr                   = "http://vault.vault.svc.cluster.local:8200",
+      TF_VAR_vault_token                  = "k1_local_vault_token",
+      VAULT_ADDR                          = "http://vault.vault.svc.cluster.local:8200",
+      VAULT_TOKEN                         = "k1_local_vault_token",
+    }
+  )
 }

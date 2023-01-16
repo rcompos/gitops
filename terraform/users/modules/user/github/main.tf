@@ -27,9 +27,6 @@ resource "random_password" "password" {
 resource "vault_generic_endpoint" "user" {
   path                 = "auth/userpass/users/${var.username}"
   ignore_absent_fields = true
-  lifecycle {
-    ignore_changes = [ data_json ] 
-   }
 
   data_json = jsonencode(
     {
@@ -42,9 +39,6 @@ resource "vault_generic_endpoint" "user" {
 
 resource "vault_generic_secret" "user" {
   path = "users/${var.username}"
-  lifecycle {
-    ignore_changes = [ data_json ] 
-   }
 
   data_json = <<EOT
 {
@@ -92,11 +86,12 @@ variable "initial_password" {
   default = ""
 }
 
-variable "team_id" {
-  description = "the github team id to place the user"
-}
+# todo add organization support
+# variable "team_id" {
+#   description = "the github team id to place the user"
+# }
 
-resource "github_team_membership" "admins_team_membership" {
-  team_id  = var.team_id
-  username = var.github_username
-}
+# resource "github_team_membership" "admins_team_membership" {
+#   team_id  = var.team_id
+#   username = var.github_username
+# }

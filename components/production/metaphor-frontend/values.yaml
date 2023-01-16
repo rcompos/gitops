@@ -1,19 +1,11 @@
 metaphor-frontend:
+  image:
+    repository: ghcr.io/rcompos/metaphor-frontend
+  imagePullSecrets:
+  - name: docker-config
   ingress:
-    enabled: true
-    annotations:
-      kubernetes.io/ingress.class: nginx
-      cert-manager.io/cluster-issuer: "letsencrypt-prod"
-    hosts:
-      - host: metaphor-frontend-production.<AWS_HOSTED_ZONE_NAME>
-        paths:
-          - /
-    tls:
-    - secretName: metaphor-frontend-tls
-      hosts:
-        - metaphor-frontend-production.<AWS_HOSTED_ZONE_NAME>
+    enabled: false
   metaphor:
-    host: https://metaphor-production.<AWS_HOSTED_ZONE_NAME>
+    host: http://localhost:3002
   metaphorGo:
-    host: https://metaphor-go-production.<AWS_HOSTED_ZONE_NAME>
-
+    host: http://localhost:5002
